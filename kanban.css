@@ -1,0 +1,29 @@
+*{
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+#main{
+        display:flex;
+
+}
+
+.kanban{
+    border:1px solid blue;
+    min-height: 100vh;
+    flex:1;
+    font-size:1.6rem;
+
+}
+.progress{
+    flex:2;
+
+}
+
+textarea, button{
+    font-size:1.6rem;
+    width:100%;
+}
