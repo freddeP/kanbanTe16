@@ -19,11 +19,27 @@
 
 }
 .progress{
-    flex:2;
+  
 
 }
 
 textarea, button{
     font-size:1.6rem;
     width:100%;
+}
+
+.createdTask{
+
+    padding:2%;
+    font-size:1.2em;
+    background: rgb(161, 194, 228);
+    border:1px solid grey;
+    cursor:pointer;
+    margin-bottom: 10px;
+
+}
+.backButton{
+    width:100%;
+    font-size:0.8em;
+    color:blue;
 }
