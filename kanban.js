@@ -1,103 +1,85 @@
-window.addEventListener("keydown", checkKey);
+// global variabel som hanterar sparfunktionen
+var saveArr =[];
 
-function checkKey(ev){
-  
-    if(ev.keyCode === 13)
-    {
-        saveNewTask();
+var kanban = document.getElementsByClassName('kanban');
+kanban = Array.from(kanban);
 
-    }
+for(let i in kanban)
+{
+    console.log(kanban[i]);
 
+    kanban[i].addEventListener("dragover", dragOver);
+    kanban[i].addEventListener("drop", drop);
 
 }
-// Hämta ett element i html-strukturen med hjälp av id. Lagra i konstant variabel
-const mySaveButton = document.getElementById("saveNewTask");
-// lägg till klick på save-knappen
-mySaveButton.addEventListener("click",saveNewTask);
 
-// Funktion som skall läsa in ny händelse och lagra i kanban todo
-// Obs funktionen fungerar bara vid tryck på knapp ej enter.
-// Detta pga hur vi adresserar mottagaren. Ändras i lektion 3.
+
+// Lägg till click på knapp
+
+const newTaskButton = document.getElementById('saveNewTask');
+newTaskButton.addEventListener("click",saveNewTask);
+
 function saveNewTask(){
-   
-  // Hämta textrutans innehåll
-  const text = document.getElementById('newTask');
-  if(text.value.trim().length > 0)
-  {
-    console.log(text.value);
-    // skapa en ny div
-    var divTask = document.createElement('div');
-    divTask.className = "createdTask";
-    // lägg till lyssnare till vårt nya element.
-    divTask.addEventListener("click",moveToNext);
 
-    // skapa en text-node som du kan lägga in i din nya div
-    var theText = document.createTextNode(text.value);
-    //lägg till text-noden till din nyskapade div
-    divTask.appendChild(theText);
+    // hämta ny task från textarea
+    const newTaskText = document.getElementById('newTask').value;
+    // hämta din template
+    const myTemplate = document.getElementById('todoTemplate');
+    // kopiera din template till ett nytt element
+    let newTemplate =  myTemplate.cloneNode(true);
+    newTemplate.children[0].innerHTML = newTaskText;
+    newTemplate.className = "todoTemplate";
+    let id = "_"+ Date.now();
+    newTemplate.id = id;
+    // hämta första kanban
+    let kanban = document.getElementsByClassName('kanban')[0];
+    // lägg till newTemplate till kanban nr 1 [0]
+    kanban.appendChild(newTemplate);
 
-    // lägg till nya diven i föräldern till knappen du tryckte på
-    // hämta kanban-klassen och gå in i första elementet [0]
-    const firstKanban = document.getElementsByClassName('kanban')[0];
-
-    // Lägg till tillbaka-knapp
-    var backButton = document.createElement('button');
-    backButton.className = "backButton";
-    backButton.innerHTML = "&larr;";
-    backButton.addEventListener("click", moveBack);
-    divTask.appendChild(backButton);    
-
-
-
-    firstKanban.appendChild(divTask);
+    // lägg till dragevent på nyskapad task
     
-  }  // end if
+    newTemplate.addEventListener("dragstart" , dragStart);
+    newTemplate.addEventListener("dragend" , dragEnd);
 
-  // Tömmer textrutan
-  text.value = "";
+    saveToLocal(newTemplate,0);
 
-}  // end function
-
-
-function moveToNext(){
-
-    // vi måste hitta vilket index vår nuvarande förälder har.
-    // detta för att kunna byta ut föräldern mot en bättre...
-    // 
-    const kanban = Array.from(document.getElementsByClassName('kanban'));
-   // Leta efter index för förälder jag kom ifrån...
-    let currentParentIndex = kanban.indexOf(this.parentElement);
-   
-    console.log(currentParentIndex);
-
-    if(currentParentIndex<kanban.length-1)
-    {
-     currentParentIndex = currentParentIndex + 1;
-     kanban[currentParentIndex].appendChild(this);
-    }
 }
 
-function moveBack(ev){
+var draggedEl = "";
 
-ev.stopPropagation();
+function dragStart(){
+    draggedEl = this;
+}
+function dragEnd(){  
+}
 
-    const clickedParent = this.parentElement;
-    const kanban = Array.from(document.getElementsByClassName('kanban'));
-    let currentParentIndex = kanban.indexOf(clickedParent.parentElement);
-   
-    if(currentParentIndex > 0)
-    {
-        currentParentIndex -= 1;
-        kanban[currentParentIndex].appendChild(clickedParent);
-    }
-    
+function dragOver(ev){
+    ev.preventDefault();
+}
+
+function drop(){
+    this.appendChild(draggedEl);
 }
 
 
+function saveToLocal(taskObj, kanbanIndex)
+{
+    // Objekt som är skapat och som skall sparas: taskObj
+    // Index där objektet ligger är: kanbanIndex
+
+    var tmpObj = {};
+    tmpObj.id = taskObj.id;
+    tmpObj.kanbanIndex = kanbanIndex;
+    tmpObj.content = taskObj.innerHTML;
+    tmpObj.className = taskObj.className;
+    tmpObj.draggeble = true;
 
 
+    saveArr.push(tmpObj);
+
+    console.log(saveArr);
+
+    localStorage.setItem("kanban", JSON.stringify(saveArr) );
 
 
-
-
-
+}

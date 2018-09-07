@@ -18,6 +18,12 @@
     font-size:1.6rem;
 
 }
+.kanban h1{
+
+    font-size:18px;
+    border-bottom:3px dashed green;
+
+}
 .progress{
   
 
@@ -28,7 +34,7 @@ textarea, button{
     width:100%;
 }
 
-.createdTask{
+.todoTemplate{
 
     padding:2%;
     font-size:1.2em;
@@ -42,4 +48,8 @@ textarea, button{
     width:100%;
     font-size:0.8em;
     color:blue;
+}
+
+.hidden{
+    display:none;
 }
