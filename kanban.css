@@ -18,6 +18,10 @@
     font-size:1.6rem;
 
 }
+.dragOver{
+    background:#ddd;
+}
+
 .kanban h1{
 
     font-size:18px;

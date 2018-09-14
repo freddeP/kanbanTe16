@@ -4,11 +4,51 @@ var saveArr =[];
 var kanban = document.getElementsByClassName('kanban');
 kanban = Array.from(kanban);
 
+// När sidan laddas/laddas om
+// så skall vi hämta vad som finns i LOCAL STORAGE
+window.addEventListener("DOMContentLoaded",initContent);
+
+function initContent(){
+
+   const kanbanContent =  localStorage.getItem("kanban");
+   // gör om texten från LS till array/objekt
+   const kanbanContentArr = JSON.parse(kanbanContent);
+
+   // ta oss igenom hela arrayen
+   for(let i in kanbanContentArr)
+   {
+    console.log(kanbanContentArr[i]);
+    let template = document.getElementById('todoTemplate');
+    let clonedTemplate = template.cloneNode(true);
+    // ändra id
+    clonedTemplate.id = kanbanContentArr[i].id;
+    // ändra klass
+    clonedTemplate.className = kanbanContentArr[i].className;
+    // lägg till innehåll
+    clonedTemplate.innerHTML = kanbanContentArr[i].content;
+
+    // lägg till dragEvents
+    clonedTemplate.addEventListener("dragstart",dragStart);
+    clonedTemplate.addEventListener("dragend",dragEnd);
+
+
+    kanban[ kanbanContentArr[i].kanbanIndex ].appendChild(clonedTemplate);
+
+
+   }
+
+
+}
+
+
+
+
 for(let i in kanban)
 {
     console.log(kanban[i]);
 
     kanban[i].addEventListener("dragover", dragOver);
+    kanban[i].addEventListener("dragleave", dragLeave);
     kanban[i].addEventListener("drop", drop);
 
 }
@@ -55,10 +95,17 @@ function dragEnd(){
 
 function dragOver(ev){
     ev.preventDefault();
+    this.className += " dragOver";
+}
+function dragLeave(){
+    this.className = "kanban";
 }
 
 function drop(){
     this.appendChild(draggedEl);
+    this.className = "kanban";
+    // varje gång denna funktion körs måste vi uppdatera
+    // kanbanindex för vår sparade händelse.
 }
 
 
